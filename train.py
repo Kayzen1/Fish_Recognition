@@ -29,7 +29,7 @@ print('Adding Average Pooling Layer and Softmax Output Layer ...')
 output = InceptionV3_notop.get_layer(index = -1).output  # Shape: (8, 8, 2048)
 output = AveragePooling2D((8, 8), strides=(8, 8), name='avg_pool')(output)
 output = Flatten(name='flatten')(output)
-output = Dense(8, activation='softmax', name='predictions')(output)
+output = Dense(2, activation='softmax', name='predictions')(output)
 
 InceptionV3_model = Model(InceptionV3_notop.input, output)
 #InceptionV3_model.summary()
@@ -77,8 +77,8 @@ validation_generator = val_datagen.flow_from_directory(
 
 InceptionV3_model.fit_generator(
         train_generator,
-        samples_per_epoch = nbr_train_samples,
-        nb_epoch = nbr_epochs,
+        steps_per_epoch = nbr_train_samples,
+        epochs = nbr_epochs,
         validation_data = validation_generator,
-        nb_val_samples = nbr_validation_samples,
+        validation_steps = nbr_validation_samples,
         callbacks = [best_model])
