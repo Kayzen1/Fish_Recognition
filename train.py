@@ -9,15 +9,15 @@ from keras.preprocessing.image import ImageDataGenerator
 learning_rate = 0.0001
 img_width = 299
 img_height = 299
-nbr_train_samples = 3019
-nbr_validation_samples = 758
+nbr_train_samples = 615
+nbr_validation_samples = 154
 nbr_epochs = 25
 batch_size = 32
 
-train_data_dir = '/Users/pengpai/Desktop/python/DeepLearning/Kaggle/NCFM/data/train_split'
-val_data_dir = '/Users/pengpai/Desktop/python/DeepLearning/Kaggle/NCFM/data/val_split'
+train_data_dir = './train_split'
+val_data_dir = './val_split'
 
-FishNames = ['ALB', 'BET', 'DOL', 'LAG', 'NoF', 'OTHER', 'SHARK', 'YFT']
+FishNames = ['goldfish', 'squid']
 
 print('Loading InceptionV3 Weights ...')
 InceptionV3_notop = InceptionV3(include_top=False, weights='imagenet',

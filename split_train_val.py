@@ -4,12 +4,12 @@ import shutil
 
 np.random.seed(2016)
 
-root_train = '/Users/pengpai/Desktop/python/DeepLearning/Kaggle/NCFM/data/train_split'
-root_val = '/Users/pengpai/Desktop/python/DeepLearning/Kaggle/NCFM/data/val_split'
+root_train = './train_split'
+root_val = './val_split'
 
-root_total = '/Users/pengpai/Desktop/python/DeepLearning/Kaggle/NCFM/data/train'
+root_total = './train'
 
-FishNames = ['ALB', 'BET', 'DOL', 'LAG', 'NoF', 'OTHER', 'SHARK', 'YFT']
+FishNames = ['goldfish', 'squid']
 
 nbr_train_samples = 0
 nbr_val_samples = 0
