@@ -3,6 +3,8 @@
 ### Example user template
 
 # IntelliJ project files
+*
+!/**/
 .idea
 *.iml
 out
@@ -11,3 +13,4 @@ train
 train_split
 val_split
 venv
+!*.py

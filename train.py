@@ -11,8 +11,9 @@ img_width = 299
 img_height = 299
 nbr_train_samples = 615
 nbr_validation_samples = 154
-nbr_epochs = 25
-batch_size = 32
+nbr_epochs = 2
+batch_size = 8
+# batch_size = 32
 
 train_data_dir = './train_split'
 val_data_dir = './val_split'
@@ -39,7 +40,7 @@ InceptionV3_model.compile(loss='categorical_crossentropy', optimizer = optimizer
 
 # autosave best Model
 best_model_file = "./weights.h5"
-best_model = ModelCheckpoint(best_model_file, monitor='val_acc', verbose = 1, save_best_only = True)
+best_model = ModelCheckpoint(best_model_file, monitor='val_accuracy', verbose = 1, save_best_only = True)
 
 # this is the augmentation configuration we will use for training
 train_datagen = ImageDataGenerator(
@@ -77,8 +78,8 @@ validation_generator = val_datagen.flow_from_directory(
 
 InceptionV3_model.fit_generator(
         train_generator,
-        steps_per_epoch = nbr_train_samples,
+        steps_per_epoch = nbr_train_samples/batch_size,
         epochs = nbr_epochs,
         validation_data = validation_generator,
-        validation_steps = nbr_validation_samples,
+        validation_steps = nbr_validation_samples/batch_size,
         callbacks = [best_model])
