@@ -1,4 +1,5 @@
 from keras.applications.inception_v3 import InceptionV3
+from keras.applications.resnet50 import ResNet50
 import os
 from keras.layers import Flatten, Dense, AveragePooling2D
 from keras.models import Model
@@ -21,19 +22,22 @@ val_data_dir = './val_split'
 
 FishNames = ['Goldfish', 'Clownfish','Grass Carp','Soles','Weever','Little Yellow Croaker']
 
-print('Loading InceptionV3 Weights ...')
-InceptionV3_notop = InceptionV3(include_top=False, weights='imagenet',
+# print('Loading InceptionV3 Weights ...')
+# InceptionV3_notop = InceptionV3(include_top=False, weights='imagenet',
+#                     input_tensor=None, input_shape=(299, 299, 3))
+print('Loading ResNet50 Weights ...')
+ResNet50_notop = ResNet50(include_top=False, weights='imagenet',
                     input_tensor=None, input_shape=(299, 299, 3))
 # Note that the preprocessing of InceptionV3 is:
 # (x / 255 - 0.5) x 2
 
 print('Adding Average Pooling Layer and Softmax Output Layer ...')
-output = InceptionV3_notop.get_layer(index = -1).output  # Shape: (8, 8, 2048)
+output = ResNet50_notop.get_layer(index = -1).output
 output = AveragePooling2D((8, 8), strides=(8, 8), name='avg_pool')(output)
 output = Flatten(name='flatten')(output)
 output = Dense(6, activation='softmax', name='predictions')(output)
 
-InceptionV3_model = Model(InceptionV3_notop.input, output)
+InceptionV3_model = Model(ResNet50_notop.input, output)
 #InceptionV3_model.summary()
 
 optimizer = SGD(lr = learning_rate, momentum = 0.9, decay = 0.0, nesterov = True)

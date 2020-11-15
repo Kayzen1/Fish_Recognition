@@ -13,7 +13,7 @@ FishNames = ['Goldfish', 'Clownfish','Grass Carp','Soles','Weever','Little Yello
 
 root_path = os.path.dirname(os.path.realpath(__file__))
 
-weights_path = os.path.join(root_path, './weights.h5')
+weights_path = os.path.join(root_path, './weights_valacc.h5')
 
 test_data_dir = './test_split'
 
