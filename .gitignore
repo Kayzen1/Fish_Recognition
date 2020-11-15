@@ -13,4 +13,5 @@ train
 train_split
 val_split
 venv
+pic
 !*.py

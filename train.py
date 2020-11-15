@@ -9,16 +9,17 @@ from keras.preprocessing.image import ImageDataGenerator
 learning_rate = 0.0001
 img_width = 299
 img_height = 299
-nbr_train_samples = 615
-nbr_validation_samples = 154
-nbr_epochs = 2
+nbr_train_samples = 1969
+nbr_validation_samples = 494
+# test：502
+nbr_epochs = 50
 batch_size = 8
 # batch_size = 32
 
 train_data_dir = './train_split'
 val_data_dir = './val_split'
 
-FishNames = ['goldfish', 'squid']
+FishNames = ['Goldfish', 'Clownfish','Grass Carp','Soles','Weever','Little Yellow Croaker']
 
 print('Loading InceptionV3 Weights ...')
 InceptionV3_notop = InceptionV3(include_top=False, weights='imagenet',
@@ -30,7 +31,7 @@ print('Adding Average Pooling Layer and Softmax Output Layer ...')
 output = InceptionV3_notop.get_layer(index = -1).output  # Shape: (8, 8, 2048)
 output = AveragePooling2D((8, 8), strides=(8, 8), name='avg_pool')(output)
 output = Flatten(name='flatten')(output)
-output = Dense(2, activation='softmax', name='predictions')(output)
+output = Dense(6, activation='softmax', name='predictions')(output)
 
 InceptionV3_model = Model(InceptionV3_notop.input, output)
 #InceptionV3_model.summary()
@@ -78,8 +79,8 @@ validation_generator = val_datagen.flow_from_directory(
 
 InceptionV3_model.fit_generator(
         train_generator,
-        steps_per_epoch = nbr_train_samples/batch_size,
+        # steps_per_epoch = nbr_train_samples/batch_size,
         epochs = nbr_epochs,
         validation_data = validation_generator,
-        validation_steps = nbr_validation_samples/batch_size,
+        # validation_steps = nbr_validation_samples/batch_size,
         callbacks = [best_model])

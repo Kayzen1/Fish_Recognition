@@ -7,15 +7,15 @@ import numpy as np
 img_width = 299
 img_height = 299
 batch_size = 8
-nbr_test_samples = 10
+nbr_test_samples = 74
 
-FishNames = ['goldfish', 'squid']
+FishNames = ['Goldfish', 'Clownfish','Grass Carp','Soles','Weever','Little Yellow Croaker']
 
 root_path = os.path.dirname(os.path.realpath(__file__))
 
-weights_path = os.path.join(root_path, 'weights.h5')
+weights_path = os.path.join(root_path, './weights.h5')
 
-test_data_dir = './test'
+test_data_dir = './test_split'
 
 # test data generator for prediction
 test_datagen = ImageDataGenerator(rescale=1./255)
@@ -42,7 +42,7 @@ np.savetxt(os.path.join(root_path, 'predictions.txt'), predictions)
 
 print('Begin to write submission file ..')
 f_submit = open(os.path.join(root_path, 'submit.csv'), 'w')
-f_submit.write('image,goldfish,squid\n')
+f_submit.write('image,Goldfish, Clownfish,Grass Carp,Soles,Weever,Little Yellow Croaker\n')
 for i, image_name in enumerate(test_image_list):
     pred = ['%.6f' % p for p in predictions[i, :]]
     if i % 10 == 0:
