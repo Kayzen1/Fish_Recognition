@@ -10,8 +10,8 @@ from keras.preprocessing.image import ImageDataGenerator
 learning_rate = 0.0001
 img_width = 299
 img_height = 299
-nbr_train_samples = 1969
-nbr_validation_samples = 494
+# nbr_train_samples = 1969
+# nbr_validation_samples = 494
 # test：502
 nbr_epochs = 50
 batch_size = 8
@@ -20,7 +20,7 @@ batch_size = 8
 train_data_dir = './train_split'
 val_data_dir = './val_split'
 
-FishNames = ['Goldfish', 'Clownfish','Grass Carp','Soles','Weever','Little Yellow Croaker']
+FishNames = ['Goldfish', 'Clownfish','Grass Carp','Soles','Catfish','Little Yellow Croaker','Butterfish','Snakehead']
 
 # print('Loading InceptionV3 Weights ...')
 # InceptionV3_notop = InceptionV3(include_top=False, weights='imagenet',
@@ -35,7 +35,7 @@ print('Adding Average Pooling Layer and Softmax Output Layer ...')
 output = ResNet50_notop.get_layer(index = -1).output
 output = AveragePooling2D((8, 8), strides=(8, 8), name='avg_pool')(output)
 output = Flatten(name='flatten')(output)
-output = Dense(6, activation='softmax', name='predictions')(output)
+output = Dense(8, activation='softmax', name='predictions')(output)
 
 InceptionV3_model = Model(ResNet50_notop.input, output)
 #InceptionV3_model.summary()

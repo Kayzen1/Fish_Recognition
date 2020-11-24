@@ -10,7 +10,7 @@ root_test = './test_split'
 
 root_total = './train'
 
-FishNames = ['Goldfish', 'Clownfish','Grass Carp','Soles','Weever','Little Yellow Croaker']
+FishNames = ['Goldfish', 'Clownfish','Grass Carp','Soles','Catfish','Little Yellow Croaker','Butterfish','Snakehead']
 
 nbr_train_samples = 0
 nbr_val_samples = 0
