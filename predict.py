@@ -6,27 +6,29 @@ import numpy as np
 
 img_width = 299
 img_height = 299
-batch_size = 8
+batch_size = 1
 nbr_test_samples = 74
 
 FishNames = ['Goldfish', 'Clownfish','Grass Carp','Soles','Weever','Little Yellow Croaker']
 
 root_path = os.path.dirname(os.path.realpath(__file__))
 
-weights_path = os.path.join(root_path, './weights_valacc.h5')
+weights_path = os.path.join(root_path, './weights_valacc2.h5')
 
 test_data_dir = './test_split'
 
 # test data generator for prediction
 test_datagen = ImageDataGenerator(rescale=1./255)
 
+FishNames = ['Goldfish', 'Clownfish','Grass Carp','Soles','Weever','Little Yellow Croaker']
+
 test_generator = test_datagen.flow_from_directory(
         test_data_dir,
         target_size=(img_width, img_height),
         batch_size=batch_size,
         shuffle = False, # Important !!!
-        classes = None,
-        class_mode = None)
+        classes = FishNames,
+        class_mode = 'categorical')
 
 test_image_list = test_generator.filenames
 print(test_image_list)
@@ -52,3 +54,6 @@ for i, image_name in enumerate(test_image_list):
 f_submit.close()
 
 print('Submission file successfully generated!')
+# test_generator.reset()
+# scores = InceptionV3_model.evaluate_generator(test_generator,verbose=1)
+# print(scores)
