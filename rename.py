@@ -7,6 +7,7 @@ def rename_files(fish):
         print(file)
         os.rename(os.path.join(folder,file),os.path.join(folder,fish+'_'+file))
 
-fishs = ['False Kelpfish','Filefish','Little Yellow Croaker','Soles','Squid']
+fishs = []
+# fishs = ['False Kelpfish','Filefish','Little Yellow Croaker','Soles','Squid']
 for fish in fishs:
     rename_files(fish)
