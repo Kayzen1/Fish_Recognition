@@ -6,30 +6,23 @@ from keras.models import Model
 from keras.optimizers import RMSprop, SGD
 from keras.callbacks import ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator
+import matplotlib.pyplot as plt
 
 learning_rate = 0.0001
 img_width = 299
 img_height = 299
-# nbr_train_samples = 1969
-# nbr_validation_samples = 494
-# test：502
 nbr_epochs = 50
 batch_size = 8
-# batch_size = 32
 
 train_data_dir = './train_split'
 val_data_dir = './val_split'
 
 FishNames = ['Goldfish', 'Clownfish','Grass Carp','Soles','Catfish','Little Yellow Croaker','Butterfish','Snakehead']
 
-# print('Loading InceptionV3 Weights ...')
-# InceptionV3_notop = InceptionV3(include_top=False, weights='imagenet',
-#                     input_tensor=None, input_shape=(299, 299, 3))
+
 print('Loading ResNet50 Weights ...')
 ResNet50_notop = ResNet50(include_top=False, weights='imagenet',
                     input_tensor=None, input_shape=(299, 299, 3))
-# Note that the preprocessing of InceptionV3 is:
-# (x / 255 - 0.5) x 2
 
 print('Adding Average Pooling Layer and Softmax Output Layer ...')
 output = ResNet50_notop.get_layer(index = -1).output
@@ -37,17 +30,16 @@ output = AveragePooling2D((8, 8), strides=(8, 8), name='avg_pool')(output)
 output = Flatten(name='flatten')(output)
 output = Dense(8, activation='softmax', name='predictions')(output)
 
-InceptionV3_model = Model(ResNet50_notop.input, output)
-#InceptionV3_model.summary()
+ResNet50_model = Model(ResNet50_notop.input, output)
 
 optimizer = SGD(lr = learning_rate, momentum = 0.9, decay = 0.0, nesterov = True)
-InceptionV3_model.compile(loss='categorical_crossentropy', optimizer = optimizer, metrics = ['accuracy'])
+ResNet50_model.compile(loss='categorical_crossentropy', optimizer = optimizer, metrics = ['accuracy'])
 
-# autosave best Model
+# 设置模型保存val_accuracy最高的
 best_model_file = "./weights.h5"
 best_model = ModelCheckpoint(best_model_file, monitor='val_accuracy', verbose = 1, save_best_only = True)
 
-# this is the augmentation configuration we will use for training
+# 数据增强设置
 train_datagen = ImageDataGenerator(
         rescale=1./255,
         shear_range=0.1,
@@ -57,8 +49,7 @@ train_datagen = ImageDataGenerator(
         height_shift_range=0.1,
         horizontal_flip=True)
 
-# this is the augmentation configuration we will use for validation:
-# only rescaling
+# 验证集图片只进行缩放
 val_datagen = ImageDataGenerator(rescale=1./255)
 
 train_generator = train_datagen.flow_from_directory(
@@ -66,7 +57,7 @@ train_generator = train_datagen.flow_from_directory(
         target_size = (img_width, img_height),
         batch_size = batch_size,
         shuffle = True,
-        # save_to_dir = '/Users/pengpai/Desktop/python/DeepLearning/Kaggle/NCFM/data/visualization',
+        # save_to_dir = './aug',
         # save_prefix = 'aug',
         classes = FishNames,
         class_mode = 'categorical')
@@ -76,15 +67,28 @@ validation_generator = val_datagen.flow_from_directory(
         target_size=(img_width, img_height),
         batch_size=batch_size,
         shuffle = True,
-        #save_to_dir = '/Users/pengpai/Desktop/python/DeepLearning/Kaggle/NCFM/data/visulization',
-        #save_prefix = 'aug',
         classes = FishNames,
         class_mode = 'categorical')
 
-InceptionV3_model.fit_generator(
+history = ResNet50_model.fit_generator(
         train_generator,
-        # steps_per_epoch = nbr_train_samples/batch_size,
         epochs = nbr_epochs,
         validation_data = validation_generator,
-        # validation_steps = nbr_validation_samples/batch_size,
         callbacks = [best_model])
+
+# 画acc和loss曲线
+print(history.history)
+epochs=range(len(history.history['accuracy']))
+plt.figure()
+plt.plot(epochs,history.history['accuracy'],'b',label='Training accuracy')
+plt.plot(epochs,history.history['val_accuracy'],'r',label='Validation accuracy')
+plt.title('Training and Validation accuracy')
+plt.legend()
+plt.savefig('./model_acc.jpg')
+
+plt.figure()
+plt.plot(epochs,history.history['loss'],'b',label='Training loss')
+plt.plot(epochs,history.history['val_loss'],'r',label='Validation loss')
+plt.title('Training and Validation loss')
+plt.legend()
+plt.savefig('./model_loss.jpg')
